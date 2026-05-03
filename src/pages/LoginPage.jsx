@@ -89,7 +89,7 @@ function LoginPage() {
               value={form.email}
               onChange={handleChange}
               error={errors.email}
-              placeholder="tu@eafit.edu.co"
+              placeholder="correo@eia.edu.co"
               icon={FiMail}
               required
             />
