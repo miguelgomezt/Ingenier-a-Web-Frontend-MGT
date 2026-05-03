@@ -3,20 +3,14 @@ export default {
     theme: {
       extend: {
         colors: {
-          brand: {
-            400: '#fb923c',
-            500: '#f97316',
-          },
           dark: {
-            600: '#2e2e2e',
-            700: '#242424',
-            800: '#1a1a1a',
-            900: '#0f0f0f',
+            600: '#374151', // gris oscuro
+            700: '#1f2937',
+            800: '#111827',
+          },
+          brand: {
+            500: '#f97316', // naranja (ajústalo si quieres)
           }
-        },
-        fontFamily: {
-          display: ['Syne', 'sans-serif'],
-          body: ['DM Sans', 'sans-serif'],
         },
       },
     },

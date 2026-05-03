@@ -86,7 +86,7 @@ function ParcheDetailPage() {
         await createVoteService({ planOptionId }, token)
       }
     } catch {
-      // continuar con estado local
+      
     }
     setVotosRealizados(prev => ({ ...prev, [planId]: planOptionId }))
   }
@@ -95,7 +95,7 @@ function ParcheDetailPage() {
     try {
       await confirmAttendanceService({ PlanId: planId, status }, token)
     } catch {
-      // continuar con estado local
+      
     }
     setAttendanceSelections(prev => ({ ...prev, [planId]: status }))
   }
@@ -103,10 +103,13 @@ function ParcheDetailPage() {
   const handleChangePlanState = async (planId, nextState) => {
     try {
       await changePlanStateService(planId, nextState, token)
-      await fetchAll()
     } catch {
-      console.error('Error al cambiar estado')
     }
+    setPlanes(prev => prev.map(plan =>
+      plan.id === planId
+        ? { ...plan, state: ['Draft', 'VotingOpen', 'VotingClosed', 'Scheduled'].indexOf(nextState) }
+        : plan
+    ))
   }
 
   const getRoleLabel = (role) => {

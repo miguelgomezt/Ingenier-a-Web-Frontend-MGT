@@ -2,20 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    @apply bg-dark-900 text-white font-body;
-    margin: 0;
-  }
-  h1, h2, h3, h4 {
-    @apply font-display;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@layer utilities {
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+body {
+  background-color: #111827;
+  color: white;
+  font-family: sans-serif;
 }

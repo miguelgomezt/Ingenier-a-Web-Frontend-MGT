@@ -2,8 +2,8 @@ function Input({ label, name, type = 'text', value, onChange, error, placeholder
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={name} className="text-sm font-display font-semibold text-gray-300">
-            {label} {required && <span className="text-brand-400">*</span>}
+          <label htmlFor={name} className="text-sm font-semibold text-gray-300">
+            {label} {required && <span className="text-orange-400">*</span>}
           </label>
         )}
         <div className="relative">
@@ -20,15 +20,11 @@ function Input({ label, name, type = 'text', value, onChange, error, placeholder
             onChange={onChange}
             placeholder={placeholder}
             required={required}
-            aria-invalid={!!error}
-            aria-describedby={error ? `${name}-error` : undefined}
-            className={`w-full bg-dark-700 border rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all ${Icon ? 'pl-9' : ''} ${error ? 'border-red-500' : 'border-dark-600 hover:border-dark-500'}`}
+            className={`w-full bg-gray-800 border rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all ${Icon ? 'pl-9' : ''} ${error ? 'border-red-500' : 'border-gray-600'}`}
           />
         </div>
         {error && (
-          <p id={`${name}-error`} role="alert" className="text-xs text-red-400">
-            {error}
-          </p>
+          <p role="alert" className="text-xs text-red-400">{error}</p>
         )}
       </div>
     )

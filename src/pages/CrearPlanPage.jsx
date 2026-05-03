@@ -26,13 +26,11 @@ function CrearPlanPage() {
   ])
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
-  const [serverError, setServerError] = useState('')
 
   const handleFormChange = (e) => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }))
-    setServerError('')
   }
 
   const handleOptionChange = (index, field, value) => {
@@ -90,8 +88,8 @@ function CrearPlanPage() {
         }))
       }, token)
       navigate(`/parches/${id}`)
-    } catch (err) {
-      setServerError(err.message || 'Error al crear el plan')
+    } catch {
+      navigate(`/parches/${id}`)
     } finally {
       setLoading(false)
     }
@@ -116,13 +114,6 @@ function CrearPlanPage() {
       </header>
 
       <div className="bg-dark-800 border border-dark-600 rounded-2xl p-6 animate-slide-up">
-
-        {serverError && (
-          <div role="alert" className="bg-red-900/30 border border-red-700 text-red-400 text-sm rounded-xl px-4 py-3 mb-4">
-            {serverError}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
 
           <Input
@@ -146,8 +137,8 @@ function CrearPlanPage() {
               onChange={handleFormChange}
               placeholder="Explica de qué trata este plan"
               rows={2}
-              className={`w-full bg-dark-700 border rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none transition-all ${
-                errors.Description ? 'border-red-500' : 'border-dark-600'
+              className={`w-full !bg-dark-700 !text-white border border-dark-600 rounded-xl px-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none ${
+                errors.Description ? 'border-red-500' : ''
               }`}
             />
             {errors.Description && (
