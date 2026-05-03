@@ -209,7 +209,7 @@ function CrearPlanPage() {
                   value={opt.Place}
                   onChange={e => handleOptionChange(index, 'Place', e.target.value)}
                   error={errors[`option_${index}_Place`]}
-                  placeholder="Ej: Parque El Poblado"
+                  placeholder="Ej: Cualquier zona de la universidad"
                   icon={FiMapPin}
                   required
                 />
