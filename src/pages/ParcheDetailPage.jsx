@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { FiArrowLeft, FiHash } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { getParcheByIdService, getParcheMembersService } from '../api/parcheService'
@@ -11,7 +11,6 @@ import mockParches from '../data/parches'
 import mockPlanes from '../data/planes'
 import mockMembers from '../data/members'
 import mockRanking from '../data/ranking'
-import Button from '../components/ui/Button'
 import { Spinner, ErrorState } from '../components/ui/Feedback'
 import PlanVotingSection from '../components/ui/PlanVotingSection'
 import MembersTab from '../components/ui/MembersTab'
@@ -21,6 +20,7 @@ function ParcheDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { token } = useAuth()
+  const [searchParams] = useSearchParams()
 
   const [parche, setParche] = useState(null)
   const [members, setMembers] = useState([])
@@ -31,6 +31,11 @@ function ParcheDetailPage() {
   const [activeTab, setActiveTab] = useState('planes')
   const [votosRealizados, setVotosRealizados] = useState({})
   const [attendanceSelections, setAttendanceSelections] = useState({})
+
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab) setActiveTab(tab)
+  }, [])
 
   const fetchAll = async () => {
     setLoading(true)
@@ -75,8 +80,8 @@ function ParcheDetailPage() {
       } else {
         await createVoteService({ planOptionId }, token)
       }
-    } catch {
-      console.error('Error al votar')
+    } catch (err) {
+      console.error('Error al votar:', err.message)
     }
     setVotosRealizados(prev => ({ ...prev, [planId]: planOptionId }))
   }
@@ -84,8 +89,8 @@ function ParcheDetailPage() {
   const handleAttendance = async (planId, status) => {
     try {
       await confirmAttendanceService({ PlanId: planId, status }, token)
-    } catch {
-      console.error('Error al confirmar asistencia')
+    } catch (err) {
+      console.error('Error al confirmar asistencia:', err.message)
     }
     setAttendanceSelections(prev => ({ ...prev, [planId]: status }))
   }
@@ -93,8 +98,8 @@ function ParcheDetailPage() {
   const handleChangePlanState = async (planId, nextState) => {
     try {
       await changePlanStateService(planId, nextState, token)
-    } catch {
-      console.error('Error al cambiar estado')
+    } catch (err) {
+      console.error('Error al cambiar estado:', err.message)
     }
     setPlanes(prev => prev.map(plan =>
       plan.id === planId
