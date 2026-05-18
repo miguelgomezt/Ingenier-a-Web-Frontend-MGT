@@ -14,7 +14,7 @@ const ATTENDANCE_OPTIONS = [
   { value: 'Maybe', label: 'Tal vez' },
 ]
 
-function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVotar, onAttendance, onChangePlanState, onCrearPlan, parcheId }) {
+function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVotar, onAttendance, onChangePlanState, onCrearPlan }) {
   if (planes.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
@@ -41,6 +41,7 @@ function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVo
 
           return (
             <li key={plan.id} className="bg-dark-800 border border-dark-600 rounded-2xl p-5">
+
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h3 className="font-display font-bold text-white">{plan.title}</h3>
                 <span className={`text-xs font-semibold shrink-0 ${stateInfo.color}`}>
@@ -70,7 +71,7 @@ function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVo
                           >
                             <div className="flex justify-between text-sm mb-1.5">
                               <div>
-                                <span className="font-semibold text-white">{opcion.place}</span>
+                                <span className="font-semibold text-white">{opcion.lugar}</span>
                                 <span className="text-gray-400 text-xs ml-2">
                                   {new Date(opcion.time).toLocaleDateString('es-CO', {
                                     day: 'numeric', month: 'short',
@@ -103,7 +104,7 @@ function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVo
                   <ul className="flex flex-col gap-2" role="list">
                     {plan.options?.map(opcion => {
                       const pct = totalVotos > 0 ? Math.round((opcion.voteCount / totalVotos) * 100) : 0
-                      const esGanadora = opcion.voteCount === Math.max(...plan.options.map(o => o.voteCount))
+                      const esGanadora = opcion.voteCount === Math.max(...plan.options.map(o => o.voteCount || 0))
                       return (
                         <li
                           key={opcion.id}
@@ -114,7 +115,7 @@ function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVo
                           <div className="flex justify-between text-sm mb-1.5">
                             <div className="flex items-center gap-2">
                               {esGanadora && <FiCheckCircle size={14} className="text-brand-400" />}
-                              <span className="font-semibold text-white">{opcion.place}</span>
+                              <span className="font-semibold text-white">{opcion.lugar}</span>
                               <span className="text-gray-400 text-xs">
                                 {new Date(opcion.time).toLocaleDateString('es-CO', {
                                   day: 'numeric', month: 'short',
@@ -125,7 +126,10 @@ function PlanVotingSection({ planes, votosRealizados, attendanceSelections, onVo
                             <span className="text-gray-400">{pct}%</span>
                           </div>
                           <div className="w-full bg-dark-600 rounded-full h-1.5">
-                            <div className="bg-brand-500 h-1.5 rounded-full" style={{ width: `${pct}%` }} />
+                            <div
+                              className="bg-brand-500 h-1.5 rounded-full"
+                              style={{ width: `${pct}%` }}
+                            />
                           </div>
                         </li>
                       )

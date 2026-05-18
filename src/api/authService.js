@@ -8,7 +8,7 @@ export async function loginService(loginDTO) {
   })
   if (!response.ok) {
     const error = await response.json().catch(() => ({}))
-    throw new Error(error.message || 'Error al iniciar sesión')
+    throw new Error(error.message || 'Credenciales incorrectas')
   }
   return response.json()
 }

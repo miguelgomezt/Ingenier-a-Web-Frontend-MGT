@@ -43,14 +43,13 @@ function LoginPage() {
         Email: form.email,
         Password: form.password
       })
-      login(data.user, data.token)
-      navigate('/parches')
-    } catch {
       login(
-        { nombreCompleto: 'Usuario Demo', email: form.email },
-        'mock-token-123'
+        { nombreCompleto: form.email, email: form.email },
+        data.token
       )
       navigate('/parches')
+    } catch (err) {
+      setServerError(err.message || 'Credenciales incorrectas')
     } finally {
       setLoading(false)
     }
@@ -60,7 +59,7 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md animate-slide-up">
+      <div className="w-full max-w-md">
 
         <header className="text-center mb-8">
           <h1 className="font-display font-extrabold text-4xl text-white mb-2">
@@ -89,7 +88,7 @@ function LoginPage() {
               value={form.email}
               onChange={handleChange}
               error={errors.email}
-              placeholder="correo@eia.edu.co"
+              placeholder="tu@universidad.edu.co"
               icon={FiMail}
               required
             />
