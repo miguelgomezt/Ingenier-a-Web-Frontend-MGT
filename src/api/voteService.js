@@ -1,26 +1,22 @@
 const BASE_URL = '/api/Vote'
 
 export async function createVoteService(voteDTO, token) {
-  const response = await fetch(BASE_URL, {
+  const response = await fetch(`${BASE_URL}?userId=${voteDTO.userId}&optionId=${voteDTO.planOptionId}`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(voteDTO),
   })
   if (!response.ok) throw new Error('Error al votar')
   return response.json()
 }
 
 export async function updateVoteService(voteDTO, token) {
-  const response = await fetch(BASE_URL, {
+  const response = await fetch(`${BASE_URL}?userId=${voteDTO.userId}&optionId=${voteDTO.planOptionId}`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(voteDTO),
   })
   if (!response.ok) throw new Error('Error al cambiar voto')
   return response.json()

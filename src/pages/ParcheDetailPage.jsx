@@ -75,10 +75,12 @@ function ParcheDetailPage() {
 
   const handleVotar = async (planId, planOptionId) => {
     try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
       if (votosRealizados[planId]) {
-        await updateVoteService({ planOptionId }, token)
+        await updateVoteService({ userId, planOptionId }, token)
       } else {
-        await createVoteService({ planOptionId }, token)
+        await createVoteService({ userId, planOptionId }, token)
       }
     } catch (err) {
       console.error('Error al votar:', err.message)
