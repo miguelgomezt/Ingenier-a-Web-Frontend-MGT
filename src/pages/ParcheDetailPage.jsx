@@ -82,10 +82,22 @@ function ParcheDetailPage() {
       } else {
         await createVoteService({ userId, planOptionId }, token)
       }
+      setVotosRealizados(prev => ({ ...prev, [planId]: planOptionId }))
+      setPlanes(prev => prev.map(plan => {
+        if (plan.id !== planId) return plan
+        const prevVotoId = votosRealizados[planId]
+        return {
+          ...plan,
+          options: plan.options.map(op => {
+            if (op.id === planOptionId) return { ...op, voteCount: (op.voteCount || 0) + 1 }
+            if (op.id === prevVotoId) return { ...op, voteCount: Math.max((op.voteCount || 0) - 1, 0) }
+            return op
+          })
+        }
+      }))
     } catch (err) {
       console.error('Error al votar:', err.message)
     }
-    setVotosRealizados(prev => ({ ...prev, [planId]: planOptionId }))
   }
 
   const handleAttendance = async (planId, status) => {

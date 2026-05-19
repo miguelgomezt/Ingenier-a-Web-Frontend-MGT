@@ -10,7 +10,7 @@ function RankingTab({ ranking }) {
       <ul className="flex flex-col gap-2" role="list">
         {ranking.map((entry, index) => (
           <li
-            key={entry.id}
+            key={entry.id || index}
             className="bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 flex items-center gap-4"
           >
             <span className={`font-display font-bold text-lg w-8 text-center ${
