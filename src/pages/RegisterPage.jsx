@@ -113,7 +113,7 @@ function RegisterPage() {
               value={form.email}
               onChange={handleChange}
               error={errors.email}
-              placeholder="tu@eafit.edu.co"
+              placeholder="tu@universidad.edu.co"
               icon={FiMail}
               required
             />
