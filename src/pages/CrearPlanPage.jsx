@@ -76,20 +76,23 @@ function CrearPlanPage() {
     }
     setLoading(true)
     try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
       await createPlanService({
         ParcheId: parseInt(id),
-        title: form.title,
+        Title: form.title,
         Description: form.Description,
         StartVoting: form.StartVoting,
         EndVoting: form.EndVoting,
+        CreatorId: userId,
         Options: options.map(opt => ({
-          Place: opt.Place,
+          Lugar: opt.Place,
           Time: opt.Time,
         }))
       }, token)
       navigate(`/parches/${id}`)
-    } catch {
-      navigate(`/parches/${id}`)
+    } catch (err) {
+      setServerError(err.message || 'Error al crear el plan')
     } finally {
       setLoading(false)
     }
