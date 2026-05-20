@@ -24,22 +24,25 @@ function MembersTab({ members }) {
         <EmptyState title="Sin miembros" description="Aún no hay miembros en este parche." />
       )}
       <ul className="flex flex-col gap-2" role="list">
-        {members.map(member => (
-          <li
-            key={member.id}
-            className="bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 flex items-center justify-between"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-dark-600 flex items-center justify-center text-sm font-bold text-white">
-                {member.userName?.charAt(0) || '?'}
+        {members.map(member => {
+          const nombre = member.user?.nombreCompleto || member.userName || member.usuarioId || '?'
+          return (
+            <li
+              key={member.id}
+              className="bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-dark-600 flex items-center justify-center text-sm font-bold text-white">
+                  {nombre.charAt(0)}
+                </div>
+                <span className="text-sm text-white font-semibold">{nombre}</span>
               </div>
-              <span className="text-sm text-white font-semibold">{member.userName}</span>
-            </div>
-            <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${getRoleColor(member.role)}`}>
-              {getRoleLabel(member.role)}
-            </span>
-          </li>
-        ))}
+              <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${getRoleColor(member.role)}`}>
+                {getRoleLabel(member.role)}
+              </span>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

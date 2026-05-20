@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { getParcheByIdService, getParcheMembersService } from '../api/parcheService'
 import { getPlanesByParcheService, changePlanStateService } from '../api/planService'
 import { createVoteService, updateVoteService } from '../api/voteService'
-import { confirmAttendanceService } from '../api/attendanceService'
+import { confirmAttendanceService, getAttendanceByPlanService } from '../api/attendanceService'
 import { getRankingByParcheService } from '../api/rankingService'
 import mockParches from '../data/parches'
 import mockPlanes from '../data/planes'
@@ -90,13 +90,11 @@ function ParcheDetailPage() {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]))
       const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
-      console.log('Votando:', { userId, planOptionId, planId })
       if (votosRealizados[planId]) {
         await updateVoteService({ userId, planOptionId }, token)
       } else {
         await createVoteService({ userId, planOptionId }, token)
       }
-      console.log('Voto exitoso')
       setVotosRealizados(prev => ({ ...prev, [planId]: planOptionId }))
       setPlanes(prev => prev.map(plan => {
         if (plan.id !== planId) return plan
@@ -137,6 +135,10 @@ function ParcheDetailPage() {
         ? { ...plan, state: ['Draft', 'VotingOpen', 'VotingClosed', 'Scheduled'].indexOf(nextState) }
         : plan
     ))
+  }
+
+  const handleGetAttendance = async (planId) => {
+    return await getAttendanceByPlanService(planId, token)
   }
 
   if (loading) return <Spinner className="py-32" />
@@ -193,6 +195,7 @@ function ParcheDetailPage() {
           onAttendance={handleAttendance}
           onChangePlanState={handleChangePlanState}
           onCrearPlan={() => navigate(`/parches/${id}/planes/nuevo`)}
+          onGetAttendance={handleGetAttendance}
           parcheId={id}
         />
       )}
