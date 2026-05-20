@@ -25,8 +25,11 @@ export async function createPlanService(planDTO, token) {
     },
     body: JSON.stringify(planDTO),
   })
-  if (!response.ok) throw new Error('Error al crear plan')
-  return response.json()
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error || 'Error al crear plan')
+  }
+  return true
 }
 
 export async function changePlanStateService(planId, newState, token) {
@@ -36,8 +39,11 @@ export async function changePlanStateService(planId, newState, token) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ state: newState }),
+    body: JSON.stringify({ planId: planId, State: newState }),
   })
-  if (!response.ok) throw new Error('Error al cambiar estado del plan')
-  return response.json()
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error || 'Error al cambiar estado del plan')
+  }
+  return true
 }

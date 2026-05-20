@@ -17,29 +17,41 @@ export async function getParcheByIdService(id, token) {
 }
 
 export async function createParcheService(parcheDTO, token) {
+  const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase()
   const response = await fetch(BASE_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(parcheDTO),
+    body: JSON.stringify({
+      Name: parcheDTO.Name,
+      Description: parcheDTO.Description,
+      CoverImageUrl: parcheDTO.CoverImageUrl || null,
+      InviteCode: inviteCode,
+    }),
   })
-  if (!response.ok) throw new Error('Error al crear parche')
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error || 'Error al crear parche')
+  }
   return response.json()
 }
 
 export async function joinParcheService(inviteCode, token) {
-  const response = await fetch(`${BASE_URL}/join`, {
+  const payload = JSON.parse(atob(token.split('.')[1]))
+  const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+  const response = await fetch(`${BASE_URL}/join?userId=${userId}&inviteCode=${inviteCode}`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ inviteCode }),
   })
-  if (!response.ok) throw new Error('Código de invitación inválido')
-  return response.json()
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error || 'Código de invitación inválido')
+  }
+  return true
 }
 
 export async function getParcheMembersService(parcheId, token) {

@@ -51,6 +51,18 @@ function ParcheDetailPage() {
       setMembers(membersData)
       setPlanes(planesData)
       setRanking(rankingData)
+
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+      const votosIniciales = {}
+      planesData.forEach(plan => {
+        const votoUsuario = plan.votes?.find(v => v.userId === userId)
+        if (votoUsuario) {
+          votosIniciales[plan.id] = votoUsuario.planOptionId
+        }
+      })
+      setVotosRealizados(votosIniciales)
+
     } catch {
       const mockP = mockParches.find(p => p.id === parseInt(id))
       const mockM = mockMembers.filter(m => m.parcheId === parseInt(id))
@@ -74,14 +86,17 @@ function ParcheDetailPage() {
   }, [id])
 
   const handleVotar = async (planId, planOptionId) => {
+    if (votosRealizados[planId] === planOptionId) return
     try {
       const payload = JSON.parse(atob(token.split('.')[1]))
       const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+      console.log('Votando:', { userId, planOptionId, planId })
       if (votosRealizados[planId]) {
         await updateVoteService({ userId, planOptionId }, token)
       } else {
         await createVoteService({ userId, planOptionId }, token)
       }
+      console.log('Voto exitoso')
       setVotosRealizados(prev => ({ ...prev, [planId]: planOptionId }))
       setPlanes(prev => prev.map(plan => {
         if (plan.id !== planId) return plan
@@ -102,7 +117,9 @@ function ParcheDetailPage() {
 
   const handleAttendance = async (planId, status) => {
     try {
-      await confirmAttendanceService({ PlanId: planId, status }, token)
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+      await confirmAttendanceService({ userId, PlanId: planId, status }, token)
     } catch (err) {
       console.error('Error al confirmar asistencia:', err.message)
     }

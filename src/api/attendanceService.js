@@ -1,16 +1,20 @@
 const BASE_URL = '/api/Attendance'
 
 export async function confirmAttendanceService(attendanceDTO, token) {
-  const response = await fetch(`${BASE_URL}/confirm`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(attendanceDTO),
-  })
-  if (!response.ok) throw new Error('Error al confirmar asistencia')
-  return response.json()
+  const response = await fetch(
+    `${BASE_URL}/confirm?userId=${attendanceDTO.userId}&planId=${attendanceDTO.PlanId}&status=${attendanceDTO.status}`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error || 'Error al confirmar asistencia')
+  }
+  return true
 }
 
 export async function getAttendanceByPlanService(planId, token) {
