@@ -1,6 +1,6 @@
 const BASE_URL = '/api/Auth'
 
-const fetchWithTimeout = (url, options, timeout = 5000) => {
+const fetchWithTimeout = (url, options, timeout = 10000) => {
   return Promise.race([
     fetch(url, options),
     new Promise((_, reject) =>
@@ -29,8 +29,8 @@ export async function registerService(registerDTO) {
     body: JSON.stringify(registerDTO),
   })
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}))
-    throw new Error(error.message || 'Error al registrarse')
+    const error = await response.text()
+    throw new Error(error || 'Error al registrarse')
   }
-  return response.json()
+  return true
 }

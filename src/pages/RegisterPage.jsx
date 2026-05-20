@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiMail, FiLock, FiUser, FiBook, FiUserPlus } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
-import { registerService } from '../api/authService'
+import { registerService, loginService } from '../api/authService'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 
@@ -49,7 +49,7 @@ function RegisterPage() {
     }
     setLoading(true)
     try {
-      const data = await registerService({
+      await registerService({
         Email: form.email,
         password: form.password,
         nombreCompleto: form.nombreCompleto,
@@ -57,14 +57,17 @@ function RegisterPage() {
         AvatarUrl: null,
         Role: 'User'
       })
-      login(data.user, data.token)
-      navigate('/parches')
-    } catch {
+      const data = await loginService({
+        Email: form.email,
+        Password: form.password
+      })
       login(
         { nombreCompleto: form.nombreCompleto, email: form.email },
-        'mock-token-123'
+        data.token || data.Token
       )
       navigate('/parches')
+    } catch (err) {
+      setServerError(err.message || 'Error al registrarse')
     } finally {
       setLoading(false)
     }

@@ -18,7 +18,10 @@ export async function getParcheByIdService(id, token) {
 
 export async function createParcheService(parcheDTO, token) {
   const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase()
-  const response = await fetch(BASE_URL, {
+  const payload = JSON.parse(atob(token.split('.')[1]))
+  const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+
+  const response = await fetch(`${BASE_URL}?creatorId=${userId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +30,7 @@ export async function createParcheService(parcheDTO, token) {
     body: JSON.stringify({
       Name: parcheDTO.Name,
       Description: parcheDTO.Description,
-      CoverImageUrl: parcheDTO.CoverImageUrl || null,
+      CoverImageUrl: parcheDTO.CoverImageUrl || '',
       InviteCode: inviteCode,
     }),
   })

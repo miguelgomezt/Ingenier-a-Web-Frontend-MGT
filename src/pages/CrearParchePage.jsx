@@ -40,10 +40,13 @@ function CrearParchePage() {
     }
     setLoading(true)
     try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
       await createParcheService({
         Name: form.Name,
         Description: form.Description,
         CoverImageUrl: form.CoverImageUrl || null,
+        CreatorId: userId,
       }, token)
       navigate('/parches')
     } catch {
